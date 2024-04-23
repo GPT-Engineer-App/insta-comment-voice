@@ -1,10 +1,11 @@
 import { Box, Flex, IconButton, Input, Stack, Text, Image, useToast, List, ListItem } from "@chakra-ui/react";
-import { FaHeart, FaComment, FaMicrophone, FaPaperPlane } from "react-icons/fa";
+import { FaHeart, FaComment, FaMicrophone, FaPaperPlane, FaPlay } from "react-icons/fa";
 import { useState } from "react";
 
 const Index = () => {
   const toast = useToast();
   const [comments, setComments] = useState([]);
+  const [voiceComments, setVoiceComments] = useState([]);
   const [comment, setComment] = useState("");
 
   const handleLike = () => {
@@ -29,8 +30,19 @@ const Index = () => {
   };
 
   const handleVoiceComment = () => {
+    const newVoiceComment = "Voice comment " + (voiceComments.length + 1);
+    setVoiceComments((prev) => [...prev, newVoiceComment]);
     toast({
       title: "Voice comment recorded!",
+      status: "info",
+      duration: 2000,
+      isClosable: true,
+    });
+  };
+
+  const replayVoiceComment = (voiceComment) => {
+    toast({
+      title: `Replaying: ${voiceComment}`,
       status: "info",
       duration: 2000,
       isClosable: true,
@@ -52,6 +64,12 @@ const Index = () => {
       <List spacing={3}>
         {comments.map((comment, index) => (
           <ListItem key={index}>{comment}</ListItem>
+        ))}
+        {voiceComments.map((voiceComment, index) => (
+          <ListItem key={index}>
+            {voiceComment}
+            <IconButton icon={<FaPlay />} onClick={() => replayVoiceComment(voiceComment)} aria-label="Replay voice comment" />
+          </ListItem>
         ))}
       </List>
       <Text fontSize="sm" color="gray.500" mt={2}>
