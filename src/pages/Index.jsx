@@ -1,8 +1,11 @@
-import { Box, Flex, IconButton, Input, Stack, Text, Image, useToast } from "@chakra-ui/react";
+import { Box, Flex, IconButton, Input, Stack, Text, Image, useToast, List, ListItem } from "@chakra-ui/react";
 import { FaHeart, FaComment, FaMicrophone, FaPaperPlane } from "react-icons/fa";
+import { useState } from "react";
 
 const Index = () => {
   const toast = useToast();
+  const [comments, setComments] = useState([]);
+  const [comment, setComment] = useState("");
 
   const handleLike = () => {
     toast({
@@ -13,13 +16,16 @@ const Index = () => {
     });
   };
 
-  const handleComment = () => {
-    toast({
-      title: "Comment added!",
-      status: "info",
-      duration: 2000,
-      isClosable: true,
-    });
+  const handleComment = (comment) => {
+    if (comment) {
+      setComments((prevComments) => [...prevComments, comment]);
+      toast({
+        title: "Comment added!",
+        status: "info",
+        duration: 2000,
+        isClosable: true,
+      });
+    }
   };
 
   const handleVoiceComment = () => {
@@ -40,9 +46,14 @@ const Index = () => {
         <IconButton icon={<FaMicrophone />} onClick={handleVoiceComment} aria-label="Add voice comment" />
       </Flex>
       <Stack direction="row" mt={2}>
-        <Input placeholder="Add a comment..." />
-        <IconButton icon={<FaPaperPlane />} onClick={handleComment} aria-label="Send comment" />
+        <Input placeholder="Add a comment..." value={comment} onChange={(e) => setComment(e.target.value)} />
+        <IconButton icon={<FaPaperPlane />} onClick={() => handleComment(comment)} aria-label="Send comment" />
       </Stack>
+      <List spacing={3}>
+        {comments.map((comment, index) => (
+          <ListItem key={index}>{comment}</ListItem>
+        ))}
+      </List>
       <Text fontSize="sm" color="gray.500" mt={2}>
         Posted on July 20, 2023
       </Text>
